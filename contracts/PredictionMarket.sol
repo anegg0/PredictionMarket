@@ -8,8 +8,8 @@ address market;
 mapping(address => Person) voters;
 mapping(address => Market) markets;
 mapping(uint => Vote) votes;
-Market[] MarketsIndex;
 Vote[] VotesIndex;
+Market[] MarketsIndex;
 uint duration;
 uint deadline = block.number + duration;
 mapping (address => uint) balances;
@@ -29,7 +29,7 @@ mapping (address => uint) balances;
     struct Vote {
         bool voteAnswer;
         address person;
-        uint market;
+        address market;
     }
 
     modifier ownerOnly {
@@ -60,10 +60,13 @@ mapping (address => uint) balances;
         //I'm aware this boarding process makes it easy to make a sybil attack but I'm starting simple :)
         voters[voter] = voter;
         voters[voter].voteAnswer = _voteAnswer;
-        if (markets[_market]== address(0))
+        if (markets[_market]== address(0) || votes[_market].voted)
         return;
-        markets[Market] = _prediction;
-
+        votes[_market].person = voter;
+        votes[_market].voteAnswer = _voteAnswer;
+        votes[_market].market = market;
+        votes[_market].voted;
+        votes[_market].push(voteIndex);
     }
 
 build a balance system
