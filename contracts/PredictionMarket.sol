@@ -2,31 +2,34 @@ pragma solidity ^0.4.0;
 contract PredictionMarket {
 
 address owner;
-mapping(address => Voter) voters;
-mapping(uint => Prediction) predictions;
-mapping(address => Vote) votes;
-Prediction[] PredictionsIndex;
+address marketOwner;
+address voter;
+address market;
+mapping(address => Person) voters;
+mapping(address => Market) markets;
+mapping(uint => Vote) votes;
+Market[] MarketsIndex;
+Vote[] VotesIndex;
 uint duration;
 uint deadline = block.number + duration;
+mapping (address => uint) balances;
 
-    struct Voter {
-        bool voted;
+    struct Person {
         uint vote;
-        bool solver;
+
     }
-    struct Prediction {
+    struct Market {
         uint voteCount;
-        bytes predictionStatement;
+        bytes marketQuestion;
         uint duration;
-        address predictionOwner;
-        bool predictionOutcome;
-        bool predictionOwner;
+        address marketOwner;
+        bool marketAnswer;
     }
 
     struct Vote {
         bool voteAnswer;
-        address Voter;
-        uint prediction;
+        address person;
+        uint market;
     }
 
     modifier ownerOnly {
@@ -40,20 +43,46 @@ uint deadline = block.number + duration;
         owner = msg.sender;
     }
 
-    function predictionMarketBuilder(bytes _predictionStatement, uint _duration, address _predictionOwner)  ownerOnly {
-        Prediction[Prediction].predictionOwner = _predictionOwner;
-        Prediction[Prediction].predictionStatement = _predictionStatement;
-        Prediction[Prediction].duration = _duration;
+    function marketBuilder(bytes _marketQuestion, uint _duration)   {
+        marketOwner = msg.sender;
+        markets[Market].marketOwner = marketOwner;
+        Market[Market].marketQuestion = _marketQuestion;
+        Market[Market].duration = _duration;
+        Market[Market].push(MarketsIndex);
     }
 
-    function voteBuilder(bool voted, )  ownerOnly {
-        voters[Voter].predictionOwner = _predictionOwner;
-        Prediction[Prediction].predictionStatement = _predictionStatement;
-        Prediction[Prediction].duration = _duration;
+//must create a vote, check if voter has voted on this one, 
+    function vote(address _market, uint _prediction, bool _voteAnswer)
+    payable
+    returns(bool success)
+     {
+        voter = msg.sender;
+        //I'm aware this boarding process makes it easy to make a sybil attack but I'm starting simple :)
+        voters[voter] = voter;
+        voters[voter].voteAnswer = _voteAnswer;
+        if (markets[_market]== address(0))
+        return;
+        markets[Market] = _prediction;
+
     }
 
-    function giveRightToVote(address voter) {
-        if (msg.sender != Prediction[Prediction].predictionOwner || voters[voter].voted) 
+build a balance system
+check how the votes and stats are stored
+
+    function stashBallot
+
+    function vote(address person, uint prediction, bool voteAnswer)
+        payable
+        ownerOnly
+        returns(bool success)
+         {
+        voters[person].marketOwner = _marketOwner;
+        transfer(ballot)
+        return true;
+    }
+
+    function giveRightToVote(address person) {
+        if (msg.sender != Prediction[Prediction].marketOwner || voters[person].voted) 
         return;
     }
 
@@ -61,6 +90,7 @@ uint deadline = block.number + duration;
         Voter storage sender = voters[msg.sender];
         if (sender.voted) 
         return;
+
         sender.voteAnswer = _voteAnswer;
         sender.vote = prediction;
         Prediction.push(sender);
