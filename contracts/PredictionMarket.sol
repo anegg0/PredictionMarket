@@ -22,6 +22,7 @@ mapping (address => uint) balances;
         uint duration;
         address marketOwner;
         bool marketAnswer;
+        uint balance;
     }
 
     struct Vote {
@@ -51,7 +52,6 @@ mapping (address => uint) balances;
     }
 
     function marketBuilder(bytes _marketQuestion, uint _duration) {
-        // marketOwner = msg.sender;
         markets[msg.sender].marketOwner = msg.sender;
         markets[msg.sender].marketQuestion = _marketQuestion;
         markets[msg.sender].duration = _duration;
@@ -64,9 +64,6 @@ mapping (address => uint) balances;
      {
         //I'm aware this boarding process makes it easy to make a sybil attack but I'm starting simple :)
         voter = msg.sender;
-        // votes[voter].voteAnswer = _voteAnswer;
-        // if (markets[_market] = address(0) || votes[_market].voted)
-        // return;
         for (uint i = 0;i<VotesIndex.length;i++) {
         if (VotesIndex[i].market == votes[voter].market)
         return;
@@ -75,7 +72,7 @@ mapping (address => uint) balances;
         votes[_market].market = market;
         votes[_market].betAmount = _betAmount;
         VotesIndex.push(votes[_market]);
-        // msg.value.transfer(ballot);
+        markets[_market].balance += _betAmount;
         return true;
         }
     }
