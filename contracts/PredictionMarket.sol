@@ -67,7 +67,7 @@ mapping (address => uint) balances;
         // votes[voter].voteAnswer = _voteAnswer;
         // if (markets[_market] = address(0) || votes[_market].voted)
         // return;
-        for (uint i=0;i<VotesIndex.length;i++)  {
+        for (uint i = 0;i<VotesIndex.length;i++) {
         if (VotesIndex[i].market == votes[voter].market)
         return;
         votes[_market].person = voter;
@@ -84,7 +84,7 @@ mapping (address => uint) balances;
         voters[voterToAppoint].solver = true;
         if (voters[voterToAppoint])
         authorizationsVoterToAppoint = voters[_voterToAppoint].votingAuthorizations;
-        for (uint i=0;i<authorizationsVoterToAppoint.length;i++) {
+        for (uint i = 0; i<authorizationsVoterToAppoint.length; i++) {
             if (authorizationsVoterToAppoint[i] == _market)
             return;
             authorizationsVoterToAppoint.push(_market);
