@@ -5,19 +5,16 @@ address owner;
 address marketOwner;
 address voter;
 address market;
+uint betAmount;
+uint duration;
 mapping(address => Person) voters;
 mapping(address => Market) markets;
 mapping(uint => Vote) votes;
 Vote[] VotesIndex;
 Market[] MarketsIndex;
-uint duration;
 uint deadline = block.number + duration;
 mapping (address => uint) balances;
 
-    struct Person {
-        uint vote;
-
-    }
     struct Market {
         uint voteCount;
         bytes marketQuestion;
@@ -32,18 +29,26 @@ mapping (address => uint) balances;
         address market;
     }
 
+    struct Person {
+        uint vote;
+        uint[] votingAuthorizations;
+    }
+
     modifier ownerOnly {
 	if (msg.sender != owner) 
     revert();
 	_;
 	}
 
-    function PredictionMarket()
-    {
+    function PredictionMarket() {
         owner = msg.sender;
     }
 
-    function marketBuilder(bytes _marketQuestion, uint _duration)   {
+    function giveRightToVote(address _person, address _market) {
+        voters[_person].Authorizations.push(_market);
+    }
+
+    function marketBuilder(bytes _marketQuestion, uint _duration) {
         marketOwner = msg.sender;
         markets[Market].marketOwner = marketOwner;
         Market[Market].marketQuestion = _marketQuestion;
@@ -51,8 +56,7 @@ mapping (address => uint) balances;
         Market[Market].push(MarketsIndex);
     }
 
-//must create a vote, check if voter has voted on this one, 
-    function vote(address _market, uint _prediction, bool _voteAnswer)
+    function vote(address _market, uint _prediction, bool _voteAnswer, uint _betAmount)
     payable
     returns(bool success)
      {
@@ -60,33 +64,16 @@ mapping (address => uint) balances;
         //I'm aware this boarding process makes it easy to make a sybil attack but I'm starting simple :)
         voters[voter] = voter;
         voters[voter].voteAnswer = _voteAnswer;
-        if (markets[_market]== address(0) || votes[_market].voted)
+        if (markets[_market]==address(0) || votes[_market].voted)
         return;
         votes[_market].person = voter;
         votes[_market].voteAnswer = _voteAnswer;
         votes[_market].market = market;
+        votes[_market].betAmount = _betAmount;
         votes[_market].voted;
         votes[_market].push(voteIndex);
-    }
-
-build a balance system
-check how the votes and stats are stored
-
-    function stashBallot
-
-    function vote(address person, uint prediction, bool voteAnswer)
-        payable
-        ownerOnly
-        returns(bool success)
-         {
-        voters[person].marketOwner = _marketOwner;
-        transfer(ballot)
+        msg.value.transfer(ballot);
         return true;
-    }
-
-    function giveRightToVote(address person) {
-        if (msg.sender != Prediction[Prediction].marketOwner || voters[person].voted) 
-        return;
     }
 
     function vote(uint8 prediction, bool _voteAnswer) {
