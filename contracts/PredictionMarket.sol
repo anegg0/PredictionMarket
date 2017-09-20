@@ -91,11 +91,10 @@ mapping (address => uint) balances;
         VoterStruct memory voterToAppoint;
         voterToAppoint = VoterStructs[rowNumber];
         for (uint i = 0; i<voterToAppoint.votingAuthorizations.length; i++) {
-        
-        if (voterToAppoint.votingAuthorizations == _market)
+        if (voterToAppoint.votingAuthorizations[i] == _market)
             revert();
             //couldn't find a way to push a new Market to the votingAuthorizations array... 
-            voterToAppoint.votingAuthorizations.push(_market);
+            voterToAppoint.votingAuthorizations[i].push(_market);
             return true;
             }
         }
