@@ -7,13 +7,15 @@ address voter;
 address market;
 uint betAmount;
 uint duration;
-mapping(address => Person) voters;
+mapping(address => VoterStruct) voters;
 mapping(address => Market) markets;
 mapping(address => Vote) votes;
-Vote[] VotesIndex;
-Voter[] VotersIndex;
-Market[] MarketsIndex;
+Vote[] public VotesIndex;
+VoterStruct[] public VoterStructs;
+Market[] public MarketsIndex;
 uint deadline = block.number + duration;
+event Transfer(address indexed _from, address indexed _to, uint256 _value);
+event MarketCreation(address _marketAddress, bytes _marketQuestion);
 mapping (address => uint) balances;
 
     struct Market {
@@ -32,9 +34,9 @@ mapping (address => uint) balances;
         uint betAmount;
     }
 
-    struct Person {
+    struct VoterStruct {
         uint vote;
-        uint[] votingAuthorizations;
+        address[] votingAuthorizations;
     }
 
     modifier ownerOnly {
@@ -47,54 +49,53 @@ mapping (address => uint) balances;
         owner = msg.sender;
     }
 
-    function giveRightToVote(address _person, uint _market) {
-        voters[_person].votingAuthorizations.push(_market);
-    }
+    // function giveRightToVote(address _person, uint _market) {
+    //     voters[_person].votingAuthorizations.push(_market);
+    // }
 
     function marketBuilder(bytes _marketQuestion, uint _duration) {
         markets[msg.sender].marketOwner = msg.sender;
         markets[msg.sender].marketQuestion = _marketQuestion;
         markets[msg.sender].duration = _duration;
         MarketsIndex.push(markets[msg.sender]);
+        MarketCreation(msg.sender, _marketQuestion);
     }
 
-    function vote(address _market, uint _prediction, bool _voteAnswer, uint _betAmount)
+    function vote(address _market, bool _voteAnswer, uint _betAmount)
     payable
     returns(bool success)
      {
-        //I'm aware this boarding process makes it easy to make a sybil attack but I'm starting simple :)
         voter = msg.sender;
         for (uint i = 0;i<VotesIndex.length;i++) {
         if (VotesIndex[i].market == votes[voter].market)
-        return;
+        revert();
         votes[_market].person = voter;
         votes[_market].voteAnswer = _voteAnswer;
         votes[_market].market = market;
         votes[_market].betAmount = _betAmount;
         VotesIndex.push(votes[_market]);
         markets[_market].balance += _betAmount;
+        Transfer(msg.sender, _market, _betAmount);
         return true;
         }
     }
 
-    function appointSolver (address _voterToAppoint, address _market) ownerOnly {
-        voters[voterToAppoint].solver = true;
-        if (voters[voterToAppoint])
-        authorizationsVoterToAppoint = voters[_voterToAppoint].votingAuthorizations;
-        for (uint i = 0; i<authorizationsVoterToAppoint.length; i++) {
-            if (authorizationsVoterToAppoint[i] == _market)
-            return;
-            authorizationsVoterToAppoint.push(_market);
-        }
-    }
-
-    // function winningPrediction() constant returns (uint8 _winningPrediction) {
-    //     uint256 winningVoteCount = 0;
-    //     for (uint8 prediction = 0; prediction < Predictions.length; prediction++) {
-    //         if (Predictions[prediction].voteCount > winningVoteCount) {
-    //             winningVoteCount = Predictions[prediction].voteCount;
-    //             _winningPrediction = prediction;
-    //         }
-    //     }
-    // }
+    // function appointSolver(address _voterToAppoint, uint rowNumber, address _market) 
+    // ownerOnly 
+    // public
+    // returns(bool success)
+    //     {
+        // if (votes[_voterToAppoint].market != _market)
+        // revert();
+        // // Person voters voterToAppoint; 
+        // VoterStruct memory voterToAppoint;
+        // voterToAppoint = VoterStructs[rowNumber];
+        // for (uint i = 0; i<voterToAppoint.votingAuthorizations.length; i++) {
+        
+        // if (voterToAppoint.votingAuthorizations == _market)
+        //     revert();
+        //     voterToAppoint.votingAuthorizations.push(_market);
+        //     return true;
+        //  }
+    
 }
