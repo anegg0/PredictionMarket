@@ -80,22 +80,23 @@ mapping (address => uint) balances;
         }
     }
 
-    // function appointSolver(address _voterToAppoint, uint rowNumber, address _market) 
-    // ownerOnly 
-    // public
-    // returns(bool success)
-    //     {
-        // if (votes[_voterToAppoint].market != _market)
-        // revert();
-        // // Person voters voterToAppoint; 
-        // VoterStruct memory voterToAppoint;
-        // voterToAppoint = VoterStructs[rowNumber];
-        // for (uint i = 0; i<voterToAppoint.votingAuthorizations.length; i++) {
+    function appointSolver(address _voterToAppoint, uint rowNumber, address _market) 
+    ownerOnly 
+    public
+    returns(bool success)
+        {
+        if (votes[_voterToAppoint].market != _market)
+        revert();
+        // Person voters voterToAppoint; 
+        VoterStruct memory voterToAppoint;
+        voterToAppoint = VoterStructs[rowNumber];
+        for (uint i = 0; i<voterToAppoint.votingAuthorizations.length; i++) {
         
-        // if (voterToAppoint.votingAuthorizations == _market)
-        //     revert();
-        //     voterToAppoint.votingAuthorizations.push(_market);
-        //     return true;
-        //  }
+        if (voterToAppoint.votingAuthorizations == _market)
+            revert();
+            //couldn't find a way to push a new Market to the votingAuthorizations array... 
+            voterToAppoint.votingAuthorizations.push(_market);
+            return true;
+         }
     
 }
