@@ -97,6 +97,7 @@ mapping (address => uint) balances;
             //couldn't find a way to push a new Market to the votingAuthorizations array... 
             voterToAppoint.votingAuthorizations.push(_market);
             return true;
-         }
+            }
+        }
     
 }
