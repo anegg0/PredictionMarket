@@ -10,14 +10,14 @@ uint duration;
 mapping(address => VoterStruct) VoterStructs;
 mapping(address => MarketStruct) MarketStructs;
 mapping(address => VoteStruct) VoteStructs;
+mapping (address => uint) balances;
 address[] public VotesIndex;
 address[] private VoterIndex;
 address[] public MarketsIndex;
 uint deadline = block.number + duration;
 event Transfer(address indexed _from, address indexed _to, uint256 _value);
-event LogNewVote(address _market, bool answer, uint Amount);
+event LogNewVote(address _market, bool answer, uint amount, uint balanceMarket);
 event LogMarketCreation(bytes _marketQuestion, address _marketAddress);
-mapping (address => uint) balances;
 
     struct MarketStruct {
         uint voteCount;
@@ -82,7 +82,9 @@ mapping (address => uint) balances;
         LogNewVote(
             _market, 
             _voteAnswer, 
-            _betAmount);
+            _betAmount,
+            MarketStructs[_market].balance
+            );
         return newVoteStruct.index;
 
   }
