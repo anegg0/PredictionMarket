@@ -8,7 +8,7 @@ address market;
 uint betAmount;
 uint duration;
 mapping(address => VoterStruct) VoterStructs;
-mapping(address => MarketStruct) markets;
+mapping(address => MarketStruct) MarketStructs;
 mapping(address => VoteStruct) VoteStructs;
 address[] public VotesIndex;
 address[] private VoterIndex;
@@ -78,6 +78,8 @@ mapping (address => uint) balances;
         newVoteStruct.betAmount = _betAmount;
         newVoteStruct.index = VotesIndex.push(_market)-1;
         VoterStructs[msg.sender].castedVotes.push(_market)-1;
+        MarketStructs[_market].balance += _betAmount;
+        market.transfer(_betAmount);
         LogNewVote(
             _market, 
             _voteAnswer, 
