@@ -79,7 +79,6 @@ mapping (address => uint) balances;
         newVoteStruct.index = VotesIndex.push(_market)-1;
         VoterStructs[msg.sender].castedVotes.push(_market)-1;
         MarketStructs[_market].balance += _betAmount;
-        market.transfer(_betAmount);
         LogNewVote(
             _market, 
             _voteAnswer, 
@@ -100,7 +99,6 @@ mapping (address => uint) balances;
         newMarketStruct.marketOwner = msg.sender;
         newMarketStruct.index = MarketsIndex.push(msg.sender)-1;
         LogMarketCreation( _marketQuestion, msg.sender );
-        return newMarketStruct.index;
-        
+        return newMarketStruct.index;  
     }
 }
