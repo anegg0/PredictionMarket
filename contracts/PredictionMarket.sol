@@ -90,7 +90,8 @@ event LogMarketCreation(bytes _marketQuestion,address _marketAddress);
 
     function insertMarket(
         bytes _marketQuestion,
-        uint _duration)
+        uint _duration,
+        address _marketId)
         public
         returns(uint index)
     {
@@ -99,7 +100,7 @@ event LogMarketCreation(bytes _marketQuestion,address _marketAddress);
         newMarketStruct.duration = _duration;
         newMarketStruct.marketOwner = msg.sender;
         newMarketStruct.index = MarketsIndex.push(msg.sender)-1;
-        MarketStruct[marketOwner] = newMarketStruct;
+        MarketStructs[_marketId] = newMarketStruct;
         LogMarketCreation( _marketQuestion, msg.sender );
         return newMarketStruct.index;
     }
