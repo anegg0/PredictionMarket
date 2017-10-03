@@ -13,11 +13,11 @@ mapping(address => VoteStruct) VoteStructs;
 mapping (address => uint) balances;
 address[] public VotesIndex;
 address[] private VoterIndex;
-address[] public MarketsIndex;
+uint[] public MarketsIndex;
 uint deadline = block.number + duration;
 event Transfer(address indexed _from, address indexed _to, uint256 _value);
 event LogNewVote(address _market, bool answer, uint amount, uint balanceMarket);
-event LogMarketCreation(bytes _marketQuestion, address _marketAddress);
+event LogMarketCreation(bytes _marketQuestion,address _marketAddress);
 
     struct MarketStruct {
         uint voteCount;
@@ -38,13 +38,13 @@ event LogMarketCreation(bytes _marketQuestion, address _marketAddress);
     }
 
     struct VoterStruct {
-        address[] castedVotes;
+        address castedVote;
         uint256[] votingAuthorizations;
         uint index;
     }
 
     modifier ownerOnly {
-	if (msg.sender != owner) 
+	if (msg.sender != owner)
     revert();
 	_;
 	}
@@ -64,34 +64,33 @@ event LogMarketCreation(bytes _marketQuestion, address _marketAddress);
     }
 
     function insertVote(
-        address _market, 
-        bool _voteAnswer, 
-        uint _betAmount) 
+        address _market,
+        bool _voteAnswer,
+        uint _betAmount)
         public
         returns(uint index)
     {
-        if (isVote(msg.sender, _market)) 
-        revert(); 
+        if (isVote(msg.sender, _market))
+        revert();
         VoteStruct memory newVoteStruct;
         newVoteStruct.market = _market;
         newVoteStruct.voteAnswer = _voteAnswer;
         newVoteStruct.betAmount = _betAmount;
-        newVoteStruct.index = VotesIndex.push(_market)-1;
-        VoterStructs[msg.sender].castedVotes.push(_market)-1;
+        newVoteStruct.index = VotesIndex.push(msg.sender)-1;
+        VoterStructs[msg.sender].castedVote = _market;
         MarketStructs[_market].balance += _betAmount;
         LogNewVote(
-            _market, 
-            _voteAnswer, 
+            _market,
+            _voteAnswer,
             _betAmount,
             MarketStructs[_market].balance
             );
         return newVoteStruct.index;
-
-  }
+    }
 
     function insertMarket(
         bytes _marketQuestion,
-        uint _duration) 
+        uint _duration)
         public
         returns(uint index)
     {
@@ -100,7 +99,17 @@ event LogMarketCreation(bytes _marketQuestion, address _marketAddress);
         newMarketStruct.duration = _duration;
         newMarketStruct.marketOwner = msg.sender;
         newMarketStruct.index = MarketsIndex.push(msg.sender)-1;
+        MarketStruct[marketOwner] = newMarketStruct;
         LogMarketCreation( _marketQuestion, msg.sender );
-        return newMarketStruct.index;  
+        return newMarketStruct.index;
+    }
+
+        function getMarkets(uint index)
+        constant
+        public
+        returns (bytes)
+    {
+        market = MarketsIndex.Index;
+        return market.index;
     }
 }
