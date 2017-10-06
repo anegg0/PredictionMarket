@@ -17,7 +17,7 @@ address[] public MarketsIndex;
 uint deadline = block.number + duration;
 event Transfer(address indexed _from, address indexed _to, uint256 _value);
 event LogNewVote(bytes32 _market, bool answer, uint amount, uint balanceMarket);
-event LogMarketCreation(bytes _marketQuestion,address _marketAddress);
+event LogMarketCreation(bytes _marketQuestion,bytes32 _marketAddress);
 
     struct MarketStruct {
         uint voteCount;
@@ -101,7 +101,7 @@ event LogMarketCreation(bytes _marketQuestion,address _marketAddress);
         newMarketStruct.marketOwner = msg.sender;
         newMarketStruct.index = MarketsIndex.push(msg.sender) - 1;
         MarketStructs[keccak256(msg.sender,_marketQuestion)] = newMarketStruct;
-        LogMarketCreation( _marketQuestion, msg.sender );
+        LogMarketCreation( _marketQuestion, keccak256(msg.sender,_marketQuestion) );
         return newMarketStruct.index;
     }
 
