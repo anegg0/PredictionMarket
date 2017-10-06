@@ -13,7 +13,7 @@ mapping(address => VoteStruct) VoteStructs;
 mapping (address => uint) balances;
 address[] public VotesIndex;
 address[] private VoterIndex;
-uint[] public MarketsIndex;
+address[] public MarketsIndex;
 uint deadline = block.number + duration;
 event Transfer(address indexed _from, address indexed _to, uint256 _value);
 event LogNewVote(address _market, bool answer, uint amount, uint balanceMarket);
@@ -88,7 +88,7 @@ event LogMarketCreation(bytes _marketQuestion,address _marketAddress);
         return newVoteStruct.index;
     }
 
-    function insertMarket(
+   function insertMarket(
         bytes _marketQuestion,
         uint _duration,
         address _marketId)
@@ -99,7 +99,7 @@ event LogMarketCreation(bytes _marketQuestion,address _marketAddress);
         newMarketStruct.marketQuestion = _marketQuestion;
         newMarketStruct.duration = _duration;
         newMarketStruct.marketOwner = msg.sender;
-        newMarketStruct.index = MarketsIndex.push(msg.sender)-1;
+        newMarketStruct.index = MarketsIndex.push(msg.sender) - 1;
         MarketStructs[_marketId] = newMarketStruct;
         LogMarketCreation( _marketQuestion, msg.sender );
         return newMarketStruct.index;
