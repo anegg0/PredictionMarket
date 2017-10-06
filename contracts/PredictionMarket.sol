@@ -8,16 +8,16 @@ address market;
 uint betAmount;
 uint duration;
 mapping(address => VoterStruct) VoterStructs;
-mapping(address => MarketStruct) MarketStructs;
-mapping(address => VoteStruct) VoteStructs;
+mapping(bytes32 => MarketStruct) MarketStructs;
+mapping(bytes32 => VoteStruct) VoteStructs;
 mapping (address => uint) balances;
 address[] public VotesIndex;
 address[] private VoterIndex;
-uint[] public MarketsIndex;
+address[] public MarketsIndex;
 uint deadline = block.number + duration;
 event Transfer(address indexed _from, address indexed _to, uint256 _value);
-event LogNewVote(address _market, bool answer, uint amount, uint balanceMarket);
-event LogMarketCreation(bytes _marketQuestion,address _marketAddress);
+event LogNewVote(bytes32 _market, bool answer, uint amount, uint balanceMarket);
+event LogMarketCreation(bytes _marketQuestion,bytes32 _marketAddress);
 
     struct MarketStruct {
         uint voteCount;
@@ -32,13 +32,13 @@ event LogMarketCreation(bytes _marketQuestion,address _marketAddress);
     struct VoteStruct {
         bool voteAnswer;
         address voter;
-        address market;
+        bytes32 market;
         uint betAmount;
         uint index;
     }
 
     struct VoterStruct {
-        address castedVote;
+        bytes32 castedVote;
         uint256[] votingAuthorizations;
         uint index;
     }
@@ -53,7 +53,7 @@ event LogMarketCreation(bytes _marketQuestion,address _marketAddress);
         owner = msg.sender;
     }
 
-    function isVote(address _voter, address _market)
+    function isVote(address _voter, bytes32 _market)
         public
         constant
         returns(bool isIndeed)
@@ -64,7 +64,7 @@ event LogMarketCreation(bytes _marketQuestion,address _marketAddress);
     }
 
     function insertVote(
-        address _market,
+        bytes32 _market,
         bool _voteAnswer,
         uint _betAmount)
         public
@@ -91,6 +91,7 @@ event LogMarketCreation(bytes _marketQuestion,address _marketAddress);
     function insertMarket(
         bytes _marketQuestion,
         uint _duration)
+        // address _marketId)
         public
         returns(uint index)
     {
@@ -98,18 +99,17 @@ event LogMarketCreation(bytes _marketQuestion,address _marketAddress);
         newMarketStruct.marketQuestion = _marketQuestion;
         newMarketStruct.duration = _duration;
         newMarketStruct.marketOwner = msg.sender;
-        newMarketStruct.index = MarketsIndex.push(msg.sender)-1;
-        MarketStruct[marketOwner] = newMarketStruct;
-        LogMarketCreation( _marketQuestion, msg.sender );
+        newMarketStruct.index = MarketsIndex.push(msg.sender) - 1;
+        MarketStructs[keccak256(msg.sender,_marketQuestion)] = newMarketStruct;
+        LogMarketCreation( _marketQuestion, keccak256(msg.sender,_marketQuestion) );
         return newMarketStruct.index;
     }
 
-        function getMarkets(uint index)
+        function getMarkets(bytes32 _marketId)
         constant
         public
         returns (bytes)
     {
-        market = MarketsIndex.Index;
-        return market.index;
+        return MarketStructs[_marketId].marketQuestion;
     }
 }
