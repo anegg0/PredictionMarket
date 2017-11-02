@@ -14,6 +14,7 @@ class App extends Component {
 
     this.state = {
       storageValue: 0,
+      existingMarket: "",
       web3: null
     }
   }
@@ -83,6 +84,7 @@ class App extends Component {
               <p>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</p>
               <p>Try changing the value stored on <strong>line 59</strong> of App.js.</p>
               <p>The stored value is: {this.state.storageValue}</p>
+              <p>The only existing market is: {this.state.storageValue}</p>
             </div>
           </div>
         </main>
